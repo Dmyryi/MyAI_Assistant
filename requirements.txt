@@ -1,0 +1,20 @@
+# Основные зависимости
+customtkinter
+sentence-transformers
+torch
+opencv-python
+scenedetect
+google-auth
+google-auth-oauthlib
+google-api-python-client
+gdown
+yt-dlp
+numpy
+Pillow
+
+# Безопасность токенов
+cryptography
+
+# Опционально для Windows Credential Manager (рекомендуется для Windows)
+# Раскомментируйте если используете Windows:
+# pywin32
