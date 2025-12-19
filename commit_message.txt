@@ -1,0 +1,14 @@
+Refactor: Remove all inline comments and translate all docstrings to English
+
+Changes:
+- Removed all single-line comments (#) from entire codebase
+- Translated all docstrings from Russian/Ukrainian to English
+- Maintained only docstrings (triple quotes) in English
+- Updated domain layer structure (entities and interfaces split into separate files)
+- Updated all imports to reflect new domain structure
+
+Files affected:
+- All infrastructure, application, presentation, and domain files
+- All interface files in domain/interfaces subfolders
+- Configuration and build files
+

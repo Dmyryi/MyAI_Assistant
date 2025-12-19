@@ -1,27 +1,27 @@
-"""Repository Pattern: Реализация хранения кадров"""
+"""Frame and segment storage repository"""
 import os
 import json
 from typing import List
 from dataclasses import asdict
-from domain.interfaces import IFrameRepository
-from domain.entities import VisualFrame
+from domain import IFrameRepository, VisualFrame, VideoSegment
 
 
 class VisualFrameRepository(IFrameRepository):
-    """Single Responsibility: Управление персистентностью кадров"""
+    """Manages persistence of frames and segments"""
     
-    def __init__(self, db_file: str = "data/visual_db.json"):
+    def __init__(self, db_file: str = "data/visual_db.json", segments_db_file: str = "data/segments_db.json"):
         self.db_file = db_file
+        self.segments_db_file = segments_db_file
         self.db_dir = os.path.dirname(db_file)
         self._ensure_directory()
     
     def _ensure_directory(self) -> None:
-        """Создает директорию для БД, если её нет"""
+        """Creates database directory if it doesn't exist"""
         if not os.path.exists(self.db_dir):
             os.makedirs(self.db_dir)
     
     def save(self, frames: List[VisualFrame]) -> None:
-        """Сохраняет кадры в JSON файл"""
+        """Saves frames to JSON file"""
         all_data = []
         if os.path.exists(self.db_file):
             try:
@@ -37,7 +37,7 @@ class VisualFrameRepository(IFrameRepository):
             json.dump(all_data, f, ensure_ascii=False, indent=2)
     
     def load_all(self) -> List[VisualFrame]:
-        """Загружает все кадры из JSON файла"""
+        """Loads all frames from JSON file"""
         if not os.path.exists(self.db_file):
             return []
         
@@ -49,7 +49,7 @@ class VisualFrameRepository(IFrameRepository):
             return []
     
     def prune_missing(self) -> int:
-        """Удаляет записи о несуществующих файлах"""
+        """Removes records of non-existent files"""
         if not os.path.exists(self.db_file):
             return 0
         
@@ -74,7 +74,7 @@ class VisualFrameRepository(IFrameRepository):
         return removed
     
     def _cleanup_empty_dirs(self) -> None:
-        """Очищает пустые директории кадров"""
+        """Cleans up empty frame directories"""
         frames_dir = "data/frames"
         if not os.path.exists(frames_dir):
             return
@@ -85,4 +85,59 @@ class VisualFrameRepository(IFrameRepository):
                     os.rmdir(root)
                 except OSError:
                     pass
+    
+    def save_segments(self, segments: List[VideoSegment]) -> None:
+        """Saves segments to JSON file"""
+        all_data = []
+        if os.path.exists(self.segments_db_file):
+            try:
+                with open(self.segments_db_file, "r", encoding="utf-8") as f:
+                    all_data = json.load(f)
+            except (json.JSONDecodeError, IOError):
+                all_data = []
+        
+        for segment in segments:
+            segment_dict = {
+                "video_filename": segment.video_filename,
+                "start_time": segment.start_time,
+                "end_time": segment.end_time,
+                "segment_id": segment.segment_id,
+                "preview_frame_path": segment.preview_frame_path,
+                "key_frames": [asdict(frame) for frame in segment.key_frames]
+            }
+            all_data.append(segment_dict)
+        
+        with open(self.segments_db_file, "w", encoding="utf-8") as f:
+            json.dump(all_data, f, ensure_ascii=False, indent=2)
+    
+    def load_all_segments(self) -> List[VideoSegment]:
+        """Loads all segments from JSON file"""
+        if not os.path.exists(self.segments_db_file):
+            return []
+        
+        try:
+            with open(self.segments_db_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            
+            segments = []
+            for item in data:
+                key_frames = [
+                    VisualFrame(**frame_dict) 
+                    for frame_dict in item.get("key_frames", [])
+                ]
+                
+                segment = VideoSegment(
+                    video_filename=item["video_filename"],
+                    start_time=item["start_time"],
+                    end_time=item["end_time"],
+                    segment_id=item["segment_id"],
+                    preview_frame_path=item["preview_frame_path"],
+                    key_frames=key_frames
+                )
+                segments.append(segment)
+            
+            return segments
+        except (json.JSONDecodeError, IOError, TypeError, KeyError) as e:
+            print(f"Ошибка загрузки сегментов: {e}")
+            return []
 

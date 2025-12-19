@@ -1,22 +1,21 @@
 """
-Обратная совместимость: обертка для старого API downloader
+Backward compatibility: wrapper for old downloader API
 """
 from infrastructure.downloading.video_downloader_impl import VideoDownloaderImpl
 
-# Создаем глобальный экземпляр для обратной совместимости
 _downloader = VideoDownloaderImpl()
 
 
 def download_links(urls: list[str], progress_callback=None):
     """
-    Скачивает список ссылок последовательно, возвращает статусы.
-    progress_callback ожидает сигнатуру callback(type, message), как в GUI.
+    Downloads list of links sequentially, returns statuses.
+    progress_callback expects signature callback(type, message), as in GUI.
     """
     return _downloader.download_list(urls, "", progress_callback)
 
 
 def download_from_drive(url):
-    """Обратная совместимость для старого API"""
+    """Backward compatibility for old API"""
     from infrastructure.downloader_strategy import VideoDownloader
     downloader = VideoDownloader()
     return downloader.process_link(url)

@@ -1,9 +1,9 @@
 """Infrastructure: Реализация логирования для консоли"""
-from domain.interfaces import ILogger
+from domain import ILogger
 
 
 class ConsoleLogger(ILogger):
-    """Single Responsibility: Логирование в консоль"""
+    """Console logging implementation"""
     
     def info(self, message: str) -> None:
         """Информационное сообщение"""

@@ -1,4 +1,3 @@
-# Основные зависимости
 customtkinter
 sentence-transformers
 torch
@@ -11,10 +10,5 @@ gdown
 yt-dlp
 numpy
 Pillow
-
-# Безопасность токенов
 cryptography
-
-# Опционально для Windows Credential Manager (рекомендуется для Windows)
-# Раскомментируйте если используете Windows:
-# pywin32
+pyinstaller

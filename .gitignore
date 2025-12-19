@@ -1,5 +1,3 @@
-# Создаем/обновляем .gitignore
-echo "# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -22,17 +20,15 @@ wheels/
 *.egg
 MANIFEST
 
-# Virtual Environment
 venv/
 env/
 
-# IDE
+.vs/
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Data files
 data/frames/
 source_videos/
 *.mp4
@@ -42,20 +38,16 @@ source_videos/
 *.pth
 *.bin
 
-# Build files
 *.spec
 build/
 dist/
 
-# Large files
 frmpeg.exe
 
-# Archives
 *.zip
 *.rar
 *.7z
 
-# Configs (optional - if you want to keep templates)
-# client_secret.json
-# credentials.json
-# token.enc" > .gitignore
+client_secret.json
+credentials.json
+token.enc

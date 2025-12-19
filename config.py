@@ -1,14 +1,14 @@
-"""Конфигурация приложения"""
+"""Application configuration"""
 import os
 from dataclasses import dataclass
 
 
 @dataclass
 class AppConfig:
-    """Конфигурация приложения - Single Source of Truth"""
+    """Application configuration - Single Source of Truth"""
     client_secret_file: str = "client_secret.json"
-    token_file: str = "token.enc"  # Зашифрованный файл вместо открытого JSON
-    use_windows_credential_manager: bool = True  # Использовать Windows Credential Manager на Windows
+    token_file: str = "token.enc"
+    use_windows_credential_manager: bool = True
     video_folder: str = "source_videos"
     frames_dir: str = "data/frames"
     db_file: str = "data/visual_db.json"
@@ -17,7 +17,7 @@ class AppConfig:
     
     @classmethod
     def from_env(cls) -> "AppConfig":
-        """Создает конфигурацию из переменных окружения"""
+        """Creates configuration from environment variables"""
         return cls(
             client_secret_file=os.getenv("CLIENT_SECRET_FILE", "client_secret.json"),
             token_file=os.getenv("TOKEN_FILE", "token.enc"),
@@ -30,6 +30,5 @@ class AppConfig:
         )
 
 
-# Глобальная конфигурация по умолчанию
 default_config = AppConfig()
 

@@ -1,25 +1,31 @@
-"""Domain layer: Entities и interfaces"""
-from .entities import VisualFrame, ScenarioBlock, SearchResult
+from .visual_frame import VisualFrame
+from .video_segment import VideoSegment
+from .scenario_block import ScenarioBlock
+from .search_result import SearchResult
 from .interfaces import (
-    IDownloadStrategy,
-    IDocumentSource,
+    IAuthService,
+    ITokenStorage,
     IVideoDownloader,
+    IDownloadStrategy,
+    IVideoIndexer,
     ISearchEngine,
     IFrameRepository,
-    IVideoIndexer,
-    IAuthService
+    IDocumentSource,
+    ILogger
 )
 
 __all__ = [
     'VisualFrame',
+    'VideoSegment',
     'ScenarioBlock',
     'SearchResult',
-    'IDownloadStrategy',
-    'IDocumentSource',
+    'IAuthService',
+    'ITokenStorage',
     'IVideoDownloader',
+    'IDownloadStrategy',
+    'IVideoIndexer',
     'ISearchEngine',
     'IFrameRepository',
-    'IVideoIndexer',
-    'IAuthService'
+    'IDocumentSource',
+    'ILogger'
 ]
-

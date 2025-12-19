@@ -43,6 +43,7 @@
     "btn_dislike": "👎 Miss",
     "feedback_thanks": "Thanks, feedback recorded!",
     "preview_placeholder": "🖼️\nFrame\nnot found",
+    "btn_play_segment": "▶ Play Segment",
     "preview_error": "Error\nloading\n{error}",
     "btn_view_full": "👁 View Full",
     "status_no_oauth": "ℹ️ Built-in OAuth key missing. Add client_secret.json before release.",

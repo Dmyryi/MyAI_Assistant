@@ -1,10 +1,10 @@
-"""Application Service: Управление загрузкой видео"""
+"""Video download service"""
 from typing import List, Optional, Callable
-from domain.interfaces import IVideoDownloader, IDownloadStrategy
+from domain import IVideoDownloader, IDownloadStrategy
 
 
 class VideoDownloadService:
-    """Single Responsibility: Координация загрузки видео"""
+    """Coordinates video downloading"""
     
     def __init__(self, downloader: IVideoDownloader):
         self.downloader = downloader

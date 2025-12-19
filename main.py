@@ -1,3 +1,8 @@
+import os
+import sys
+
+if getattr(sys, 'frozen', False):
+    os.chdir(os.path.dirname(os.path.abspath(sys.executable)))
 
 from infrastructure.google import OAuthService, GoogleDocsClient
 from infrastructure.persistence import VisualFrameRepository
@@ -9,29 +14,28 @@ from application.document_analysis_service import DocumentAnalysisService
 from presentation.app import App
 from config import default_config
 from application.storage_service import StorageService
+from oauth_config import get_client_secret_path
 
 def create_services():
-    """Factory Method: Создает все необходимые сервисы"""
-    # Infrastructure layer
+    """Creates and initializes all application services"""
     logger = ConsoleLogger()
     
-    # Создаем безопасное хранилище токенов
     if default_config.use_windows_credential_manager:
         try:
             token_storage = DefaultTokenStorage()
         except (ImportError, RuntimeError):
-            # Fallback на зашифрованное хранилище
             from infrastructure.security import EncryptedTokenStorage
             token_storage = EncryptedTokenStorage(default_config.token_file)
     else:
         from infrastructure.security import EncryptedTokenStorage
         token_storage = EncryptedTokenStorage(default_config.token_file)
     
-    # OAuthService будет создан без callback, callback установится в GUI
+    client_secret_path = get_client_secret_path(status_callback=logger.info if logger else None)
+    
     auth_service = OAuthService(
-        default_config.client_secret_file,
+        client_secret_path,
         token_storage=token_storage,
-        status_callback=None  # Будет установлен в GUI при необходимости
+        status_callback=None
     )
     docs_client = GoogleDocsClient(auth_service)
     frame_repository = VisualFrameRepository(default_config.db_file)
@@ -42,7 +46,6 @@ def create_services():
         feedback_file=default_config.feedback_file
     )
     
-    # Application layer
     indexing_service = VideoIndexingService(
         video_indexer,
         frame_repository,
@@ -66,11 +69,9 @@ def create_services():
 
 
 def main():
-    """Точка входа приложения"""
-    # Dependency Injection: Создаем все зависимости
+    """Application entry point"""
     services = create_services()
     
-    # Presentation layer: Передаем сервисы в GUI
     app = App(
         analysis_service=services['analysis_service'],
         indexing_service=services['indexing_service'],
